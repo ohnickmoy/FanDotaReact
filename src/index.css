@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
-img {
+.teamlogo img {
   background-color: black;
+  /* min-width: 100%; REMOVE THIS */
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
