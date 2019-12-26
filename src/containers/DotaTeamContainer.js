@@ -6,12 +6,12 @@ class DotaTeamContainer extends React.Component {
 
     renderTeams = () => {
         return this.props.teams.map((team) => {
-            return <TeamCard id={team.id} attributes={team.attributes}/>
+            return <TeamCard key={'dtc'+ team.attributes.tag}id={team.id} attributes={team.attributes}/>
         })
     }
 
     render(){
-        console.log(this.props)
+        //console.log(this.props)
         return (
             <div className='container'>
                 <div className='row'>
