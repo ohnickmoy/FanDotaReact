@@ -1,22 +1,29 @@
 import React from 'react';
 import TeamCard from "../components/TeamCard";
+import TeamPage from '../components/TeamPage'
+import { Switch, Route } from 'react-router-dom';
 //import TeamsCollection from "../containers/TeamsCollection";
 
 class DotaTeamContainer extends React.Component {
 
     renderTeams = () => {
-        return this.props.teams.map((team) => {
-            return <TeamCard key={'dtc'+ team.attributes.tag}id={team.id} attributes={team.attributes}/>
-        })
+        return (
+            <div className='row'>
+                {this.props.teams.map((team) => {
+                    return <TeamCard key={'dtc'+ team.attributes.tag} id={team.id} team={team}/>
+                })}
+            </div>
+        )
     }
 
     render(){
         //console.log(this.props)
         return (
             <div className='container'>
-                <div className='row'>
-                    {this.renderTeams()}
-                </div>
+                <Switch>
+                    <Route path='/teams/:id' render={(routerProps) => <TeamPage {...routerProps} teams={this.props.teams} selectedTeam={{}}/>}/>
+                    <Route path='/teams' render={() => this.renderTeams()}/>
+                </Switch>
             </div>
         )
     }

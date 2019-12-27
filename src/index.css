@@ -19,3 +19,12 @@ code {
   max-width: 100%;
   height: auto;
 }
+
+.teamshow img {
+  background-color: black;
+  /* min-width: 100%; REMOVE THIS */
+  display: inline-flex;
+  width: 10%;
+  max-width: 50%;
+  height: auto;
+}
