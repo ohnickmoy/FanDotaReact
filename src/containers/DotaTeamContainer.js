@@ -10,7 +10,7 @@ class DotaTeamContainer extends React.Component {
         return (
             <div className='row'>
                 {this.props.teams.map((team) => {
-                    return <TeamCard key={'dtc'+ team.attributes.tag} id={team.id} team={team}/>
+                    return <TeamCard key={'dtc'+ team.attributes.tag} id={team.id} team={team} followedTeams={this.props.followedTeams} handleFollowTeam={this.props.handleFollowTeam} handleUnfollowTeam={this.props.handleUnfollowTeam}/>
                 })}
             </div>
         )
