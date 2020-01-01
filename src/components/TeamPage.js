@@ -22,7 +22,7 @@ class TeamPage extends React.Component{
 
         return (
             <div className='teamshow'>
-                <div onClick={() => this.props.history.goBack()}>⬅️ Go Back</div>
+                <div onClick={() => this.props.history.goBack()}><span role='img' aria-label="back">⬅️ Go Back</span></div>
                 {selectedTeam && this.renderTeamInfo(selectedTeam)}
             </div>
         )

@@ -4,17 +4,18 @@ import DotaTeamContainer from './containers/DotaTeamContainer';
 import FollowedTeamsContainer from './containers/FollowedTeamsContainer'
 import NavBar from './components/NavBar'
 import Login from './components/login'
+import Signup from './components/signup'
 import { Route, Switch } from 'react-router-dom'
 
 const TeamsAPI = 'http://localhost:3000/api/v1/teams'
-const TestUserAPI = 'http://localhost:3000/api/v1/users/2'
+const TestUserAPI = 'http://localhost:3000/api/v1/users/'
 const TeamFollowerAPI = 'http://localhost:3000/api/v1/team_followers'
 class App extends React.Component {
 
   state = {
     teams: [],
-    followedTeams: []
-    //loggedIn: false
+    followedTeams: [],
+    currentUser: null
   }
 
   componentDidMount() {
@@ -24,16 +25,33 @@ class App extends React.Component {
       this.setState({teams: data.data})
     })
 
-    fetch(TestUserAPI)
-    .then(response => response.json())
-    .then(data => {
-      //console.log(data)
-      this.setState({followedTeams: data.included})
-    })
+    if(this.state.currentUser){
+      console.log('Hit it')
+      fetch(TestUserAPI + this.state.currentUser.id) 
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        this.setState({followedTeams: data.included})
+      })
+    }
+  }
+
+  redirectAndGrab = () => {
+    fetch(TestUserAPI + this.state.currentUser.data.id) 
+      .then(response => response.json())
+      .then(data => {
+
+        this.setState({followedTeams: data.included}, this.props.history.push('/teams'))
+      })
+  }
+
+  setUser = (user) => {
+    this.setState({
+      currentUser: user
+    }, () => { user ? this.redirectAndGrab() : this.props.history.push('/login')})
   }
 
   handleFollowTeam = (id) => {
-    //console.log('Made it')
     fetch(TeamFollowerAPI, {
       method: 'POST',
       headers: {
@@ -41,13 +59,11 @@ class App extends React.Component {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        team_id: id, user_id: 2
+        team_id: id, user_id: this.state.currentUser.data.id
       })
     })
     .then(response => response.json())
     .then(data => {
-      //console.log(data.included[0])
-      //console.log(this.state.followedTeams)
       let updatedFollowTeams = [...this.state.followedTeams, data.included[0]]
       this.setState({followedTeams: updatedFollowTeams})
     })
@@ -61,7 +77,7 @@ class App extends React.Component {
         'Accept': 'application/json'
       },
       body: JSON.stringify({
-        team_id:id, user_id: 2
+        team_id:id, user_id: this.state.currentUser.data.id
       })
     })
     .then(response => response.json())
@@ -73,14 +89,14 @@ class App extends React.Component {
   }
 
   render() {
-      console.log('followedTeams from App',this.state.followedTeams)
       return (
       <div>
-        <NavBar loggedIn={this.state.loggedIn}/>
+        <NavBar currentUser={this.state.currentUser} setUser={this.setUser}/>
         <Switch>
           <Route path='/myteams' render={(routerProps) => <FollowedTeamsContainer followedTeams={this.state.followedTeams} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} />
           <Route path='/teams' render={(routerProps) => <DotaTeamContainer teams={this.state.teams} followedTeams={this.state.followedTeams} handleFollowTeam={this.handleFollowTeam} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} />
-          <Route path='/login' component={Login}/>
+          <Route path='/login' render={(routerProps) =><Login  setUser={this.setUser} {...routerProps}/> }/>
+          <Route path='/signup' render={(routerProps) =><Signup setUser={this.setUser} {...routerProps}/>}/>
           <Route exact path='/' render={() => <div><h2 className='text-center'>Welcome to FanDota!</h2></div>} />
         </Switch>
       </div>

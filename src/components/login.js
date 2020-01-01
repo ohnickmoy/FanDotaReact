@@ -14,7 +14,22 @@ class Login extends React.Component{
 
     handleSubmit = (e) => {
         e.preventDefault()
-        console.log('No idea what to do here yet')
+        fetch('http://localhost:3000/api/v1/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(this.state)
+        })
+        .then(response => response.json())
+        .then(response => {
+            if(response.errors){
+                alert(response.errors)
+            }else{
+                this.props.setUser(response)
+            }
+        })
     }
 
     render(){
