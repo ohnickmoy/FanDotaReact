@@ -33,6 +33,7 @@ class Signup extends React.Component{
                     alert(response.errors)
                 }else{
                     this.props.setUser(response)
+                    localStorage.user_id = response.data.attributes.token
                 }
             })
         } else {

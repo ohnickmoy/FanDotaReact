@@ -8,17 +8,25 @@ import { Switch, Route } from 'react-router-dom';
 class FollowedTeamsContainer extends React.Component {
 
     renderTeams = () => {
-        return (
-            <div className='row'>
-                {this.props.followedTeams.map((team) => {
-                    return <TeamCard key={'ftc'+ team.attributes.tag} id={team.id} team={team} followedTeams={this.props.followedTeams} handleUnfollowTeam={this.props.handleUnfollowTeam}/>
-                })}
-            </div>
-        )
+        if(this.props.followedTeams.length === 0){
+            return (
+                <h2>Looks like you're not following any teams.</h2>
+            )
+        }else{
+            return (
+                <>
+                <h2>Teams that you're following</h2>
+                <div className='row'>
+                    {this.props.followedTeams.map((team) => {
+                        return <TeamCard key={'ftc'+ team.attributes.tag} id={team.id} team={team} followedTeams={this.props.followedTeams} handleUnfollowTeam={this.props.handleUnfollowTeam}/>
+                    })}
+                </div>
+                </>
+            )
+        }
     }
 
     render(){
-        //console.log('FOLLOWED TEAMS PROPS', this.props)
         return (
             <div className='container'>
                 <Switch>

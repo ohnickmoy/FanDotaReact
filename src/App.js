@@ -7,6 +7,7 @@ import Login from './components/login'
 import Signup from './components/signup'
 import { Route, Switch } from 'react-router-dom'
 
+const API_BASE = 'http://localhost:3000/api/v1'
 const TeamsAPI = 'http://localhost:3000/api/v1/teams'
 const TestUserAPI = 'http://localhost:3000/api/v1/users/'
 const TeamFollowerAPI = 'http://localhost:3000/api/v1/team_followers'
@@ -25,13 +26,18 @@ class App extends React.Component {
       this.setState({teams: data.data})
     })
 
-    if(this.state.currentUser){
-      console.log('Hit it')
-      fetch(TestUserAPI + this.state.currentUser.id) 
+    if(localStorage.user_id){
+      fetch(`${API_BASE}/auto_login`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authentication': localStorage.user_id
+        }
+      }) 
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-        this.setState({followedTeams: data.included})
+
+        this.setUser(data)
       })
     }
   }
@@ -41,7 +47,7 @@ class App extends React.Component {
       .then(response => response.json())
       .then(data => {
 
-        this.setState({followedTeams: data.included}, this.props.history.push('/teams'))
+        this.setState({followedTeams: data.included}, this.props.history.push('/myteams'))
       })
   }
 
@@ -56,7 +62,8 @@ class App extends React.Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Authentication': localStorage.user_id
       },
       body: JSON.stringify({
         team_id: id, user_id: this.state.currentUser.data.id
@@ -93,7 +100,7 @@ class App extends React.Component {
       <div>
         <NavBar currentUser={this.state.currentUser} setUser={this.setUser}/>
         <Switch>
-          <Route path='/myteams' render={(routerProps) => <FollowedTeamsContainer followedTeams={this.state.followedTeams} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} />
+          {this.state.currentUser ? <Route path='/myteams' render={(routerProps) => <FollowedTeamsContainer followedTeams={this.state.followedTeams} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} /> : ''}
           <Route path='/teams' render={(routerProps) => <DotaTeamContainer teams={this.state.teams} followedTeams={this.state.followedTeams} handleFollowTeam={this.handleFollowTeam} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} />
           <Route path='/login' render={(routerProps) =><Login  setUser={this.setUser} {...routerProps}/> }/>
           <Route path='/signup' render={(routerProps) =><Signup setUser={this.setUser} {...routerProps}/>}/>

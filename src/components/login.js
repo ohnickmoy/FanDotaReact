@@ -27,7 +27,9 @@ class Login extends React.Component{
             if(response.errors){
                 alert(response.errors)
             }else{
+                console.log(response)
                 this.props.setUser(response)
+                localStorage.user_id = response.data.attributes.token
             }
         })
     }
