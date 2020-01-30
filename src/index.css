@@ -24,7 +24,12 @@ code {
   background-color: black;
   /* min-width: 100%; REMOVE THIS */
   display: inline-flex;
-  width: 10%;
-  max-width: 50%;
+  /* width: 12%; */
+  max-width: 70%;
   height: auto;
+}
+
+.teamInfo {
+  display: flex;
+  flex-direction: row;
 }

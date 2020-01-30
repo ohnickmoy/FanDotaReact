@@ -9,8 +9,10 @@ import { Route, Switch } from 'react-router-dom'
 
 const API_BASE = 'http://localhost:3000/api/v1'
 const TeamsAPI = 'http://localhost:3000/api/v1/teams'
-const TestUserAPI = 'http://localhost:3000/api/v1/users/'
+//const openDotaKey = '?api_key=' + process.env.REACT_APP_OPEN_DOTA_KEY
+const userAPI = 'http://localhost:3000/api/v1/users/'
 const TeamFollowerAPI = 'http://localhost:3000/api/v1/team_followers'
+
 class App extends React.Component {
 
   state = {
@@ -21,8 +23,10 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch(TeamsAPI)
+    //fetch(`${openDotaAPI}/teams/${openDotaKey}`)
     .then(response => response.json())
     .then(data => {
+      //console.log(data.data)
       this.setState({teams: data.data})
     })
 
@@ -43,7 +47,7 @@ class App extends React.Component {
   }
 
   redirectAndGrab = () => {
-    fetch(TestUserAPI + this.state.currentUser.data.id) 
+    fetch(userAPI + this.state.currentUser.data.id) 
       .then(response => response.json())
       .then(data => {
 
@@ -100,8 +104,8 @@ class App extends React.Component {
       <div>
         <NavBar currentUser={this.state.currentUser} setUser={this.setUser}/>
         <Switch>
-          {this.state.currentUser ? <Route path='/myteams' render={(routerProps) => <FollowedTeamsContainer followedTeams={this.state.followedTeams} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} /> : ''}
-          <Route path='/teams' render={(routerProps) => <DotaTeamContainer teams={this.state.teams} followedTeams={this.state.followedTeams} handleFollowTeam={this.handleFollowTeam} handleUnfollowTeam={this.handleUnfollowTeam} {...routerProps}/>} />
+          {this.state.currentUser ? <Route path='/myteams' render={(routerProps) => <FollowedTeamsContainer followedTeams={this.state.followedTeams} handleUnfollowTeam={this.handleUnfollowTeam} currentUser={this.state.currentUser} {...routerProps}/>} /> : ''}
+          <Route path='/teams' render={(routerProps) => <DotaTeamContainer teams={this.state.teams} followedTeams={this.state.followedTeams} handleFollowTeam={this.handleFollowTeam} handleUnfollowTeam={this.handleUnfollowTeam} currentUser={this.state.currentUser} {...routerProps}/>} />
           <Route path='/login' render={(routerProps) =><Login  setUser={this.setUser} {...routerProps}/> }/>
           <Route path='/signup' render={(routerProps) =><Signup setUser={this.setUser} {...routerProps}/>}/>
           <Route exact path='/' render={() => <div><h2 className='text-center'>Welcome to FanDota!</h2></div>} />

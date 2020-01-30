@@ -13,9 +13,9 @@ const TeamCard = (props) => {
                     </div>
                 </Link>
                 <div className='text-center mb-2'>
-                    <button onClick={props.followedTeams.some(team => team.id === props.id) ? ()=>props.handleUnfollowTeam(props.id) : () => props.handleFollowTeam(props.id)}>{
+                    {props.currentUser ? <button onClick={props.followedTeams.some(team => team.id === props.id) ? ()=>props.handleUnfollowTeam(props.id) : () => props.handleFollowTeam(props.id)}>{
                         props.followedTeams.some(team => team.id === props.id) ? 'Unfollow': 'Follow'}
-                    </button>
+                    </button> : null}
                 </div>
             </div>
         </div>

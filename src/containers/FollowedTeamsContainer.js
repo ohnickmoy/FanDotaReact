@@ -18,7 +18,7 @@ class FollowedTeamsContainer extends React.Component {
                 <h2>Teams that you're following</h2>
                 <div className='row'>
                     {this.props.followedTeams.map((team) => {
-                        return <TeamCard key={'ftc'+ team.attributes.tag} id={team.id} team={team} followedTeams={this.props.followedTeams} handleUnfollowTeam={this.props.handleUnfollowTeam}/>
+                        return <TeamCard key={'ftc'+ team.attributes.tag} id={team.id} team={team} followedTeams={this.props.followedTeams} handleUnfollowTeam={this.props.handleUnfollowTeam} currentUser={this.props.currentUser}/>
                     })}
                 </div>
                 </>
